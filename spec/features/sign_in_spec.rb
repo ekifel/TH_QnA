@@ -7,11 +7,11 @@ feature 'User can sign in', %q{
 } do
 
   scenario 'Registered user tries to sign in' do
-    User.create!(email: 'user@test.com', password: '1234')
+    User.create!(email: 'user@test.com', password: '12345678')
 
-    visit '/login'
+    visit new_user_session_path
     fill_in 'Email', with: 'user@test.com'
-    fill_in 'Password', with: '1234'
+    fill_in 'Password', with: '12345678'
 
     expect(page).to have_content 'Signed in successfully.'
   end
