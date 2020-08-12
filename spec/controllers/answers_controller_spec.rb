@@ -35,7 +35,7 @@ RSpec.describe AnswersController, type: :controller do
       let(:answer_params) { attributes_for(:answer) }
 
       it 'saves a new answer in the database' do
-        expect { subject }.to change(question.answers, :count).by(1)
+        expect { subject }.to change(Answer, :count).by(1)
       end
 
       it "redirect to answer's question view" do
@@ -97,7 +97,7 @@ RSpec.describe AnswersController, type: :controller do
     subject { delete :destroy, params: { question_id: question, id: answer } }
 
     it 'deletes the answer' do
-      expect { subject }.to change(question.answers, :count).by(-1)
+      expect { subject }.to change(Answer, :count).by(-1)
     end
 
     it "redirect to answer's question" do

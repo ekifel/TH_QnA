@@ -108,11 +108,6 @@ RSpec.describe QuestionsController, type: :controller do
       expect { delete :destroy, params: { id: question } }.to change(Question, :count).by(-1)
     end
 
-    it 'answers deletes with the question' do
-      question.answers.create(attributes_for(:answer))
-      expect { delete :destroy, params: { id: question } }.to change(Answer, :count).by(-1)
-    end
-
     it 'redirects to index' do
       delete :destroy, params: { id: question }
       expect(response).to redirect_to questions_path
