@@ -1,26 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:user) { create(:user) }
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
 
-  describe 'GET #show' do
-    before { get :show, params: { question_id: question, id: answer } }
-
-    it 'render show view' do
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-    before { get :new, params: { question_id: question } }
-
-    it 'render new view' do
-      expect(response).to render_template :new
-    end
-  end
-
   describe 'GET #edit' do
+    before { login(user) }
+
     before { get :edit, params: { question_id: question, id: answer } }
 
     it 'render edit view' do
@@ -29,6 +16,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
+    before { login(user) }
+
     subject { post :create, params: { question_id: question, answer: answer_params } }
 
     context 'with valid attributes' do
@@ -53,12 +42,14 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-render new answer view' do
         subject
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
 
   describe 'PATCH #update' do
+    before { login(user) }
+
     before { patch :update, params: { question_id: question, id: answer, answer: answer_params } }
 
     context 'with valid attributes' do
@@ -91,6 +82,8 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
+    before { login(user) }
+
     let!(:question) { create(:question) }
     let!(:answer) { create(:answer, question: question) }
 
