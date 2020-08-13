@@ -1,15 +1,13 @@
 class AnswersController < ApplicationController
-  def show; end
-
-  def new; end
+  before_action :authenticate_user!
 
   def edit; end
 
   def create
     if answer.save
-      redirect_to question_path(question)
+      redirect_to question_path(question), notice: 'Your answer posted successfully'
     else
-      render :new
+      render 'questions/show', locals: { model: [question, answer] }
     end
   end
 
@@ -30,18 +28,24 @@ class AnswersController < ApplicationController
   private
 
   def answer
-    @answer ||= params[:id] ? Answer.find(params[:id]) : question.answers.new(answer_params)
+    @answer ||= params[:id] ? answers.find(params[:id]) : question.answers.new(answer_params)
   end
 
   helper_method :answer
-
-  def answer_params
-    params.require(:answer).permit(:body)
-  end
 
   def question
     @question ||= Question.find(params[:question_id])
   end
 
   helper_method :question
+
+  def answers
+    @answers ||= question.answers
+  end
+
+  helper_method :answers
+
+  def answer_params
+    params.require(:answer).permit(:body)
+  end
 end
