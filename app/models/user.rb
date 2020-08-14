@@ -6,4 +6,8 @@ class User < ApplicationRecord
 
   has_many :answers, dependent: :destroy
   has_many :questions, dependent: :destroy
+
+  def is_author?(object)
+    id == object.user_id
+  end
 end

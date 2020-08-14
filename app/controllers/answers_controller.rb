@@ -4,6 +4,7 @@ class AnswersController < ApplicationController
   def edit; end
 
   def create
+    answer.user = current_user
     if answer.save
       redirect_to question_path(question), notice: 'Your answer posted successfully'
     else
@@ -12,17 +13,19 @@ class AnswersController < ApplicationController
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to question_path(question)
+    if current_user.is_author?(answer) && answer.update(answer_params)
+      redirect_to question_path(question), notice: 'Answer updated successfully'
     else
       render :edit
     end
   end
 
   def destroy
-    answer.destroy
-
-    redirect_to question_path(question)
+    if current_user.is_author?(answer) && answer.destroy
+      redirect_to question_path(question), notice: 'Answer deleted successfully'
+    else
+      redirect_to question_path(question), alert: "You don't have permission to delete this answer"
+    end
   end
 
   private
