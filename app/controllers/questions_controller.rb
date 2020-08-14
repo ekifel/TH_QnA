@@ -12,6 +12,7 @@ class QuestionsController < ApplicationController
   def edit; end
 
   def create
+    question.user = current_user
     if question.save
       redirect_to question, notice: 'Your question successfully created.'
     else
@@ -28,8 +29,11 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    question.destroy
-    redirect_to questions_path
+    if current_user.is_author?(question) && question.destroy
+      redirect_to questions_path, notice: 'Your question deleted successfully'
+    else
+      redirect_to question_path(question), alert: "You don't have permissions to delete this question"
+    end
   end
 
   private

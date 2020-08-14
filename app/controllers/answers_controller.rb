@@ -6,15 +6,15 @@ class AnswersController < ApplicationController
   def create
     answer.user = current_user
     if answer.save
-      redirect_to question_path(question), notice: 'Your answer posted successfully'
+      redirect_to question_path(answer.question), notice: 'Your answer posted successfully'
     else
-      render 'questions/show', locals: { model: [question, answer] }
+      render 'questions/show', locals: { model: [answer.question, answer] }
     end
   end
 
   def update
     if current_user.is_author?(answer) && answer.update(answer_params)
-      redirect_to question_path(question), notice: 'Answer updated successfully'
+      redirect_to question_path(answer.question), notice: 'Answer updated successfully'
     else
       render :edit
     end
@@ -22,16 +22,16 @@ class AnswersController < ApplicationController
 
   def destroy
     if current_user.is_author?(answer) && answer.destroy
-      redirect_to question_path(question), notice: 'Answer deleted successfully'
+      redirect_to question_path(answer.question), notice: 'Your answer deleted successfully'
     else
-      redirect_to question_path(question), alert: "You don't have permission to delete this answer"
+      redirect_to question_path(answer.question), alert: "You don't have permission to delete this answer"
     end
   end
 
   private
 
   def answer
-    @answer ||= params[:id] ? answers.find(params[:id]) : question.answers.new(answer_params)
+    @answer ||= params[:id] ? Answer.find(params[:id]) : question.answers.new(answer_params)
   end
 
   helper_method :answer
