@@ -15,6 +15,9 @@ feature 'User can sign in', %q{
     click_on 'Log in'
 
     expect(page).to have_content 'Signed in successfully.'
+    expect(page).to_not have_content 'log in'
+    expect(page).to_not have_content 'sign up'
+    expect(page).to have_content 'log out'
   end
 
   scenario 'Unregistered user tries to sign in' do
