@@ -1,26 +1,14 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  let(:user) { create(:user) }
+  let(:wrong_user) { create(:user) }
   let(:question) { create(:question) }
-  let(:answer) { create(:answer, question: question) }
-
-  describe 'GET #show' do
-    before { get :show, params: { question_id: question, id: answer } }
-
-    it 'render show view' do
-      expect(response).to render_template :show
-    end
-  end
-
-  describe 'GET #new' do
-    before { get :new, params: { question_id: question } }
-
-    it 'render new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let(:answer) { create(:answer, question: question, user: user) }
 
   describe 'GET #edit' do
+    before { login(user) }
+
     before { get :edit, params: { question_id: question, id: answer } }
 
     it 'render edit view' do
@@ -29,7 +17,9 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'POST #create' do
-    subject { post :create, params: { question_id: question, answer: answer_params } }
+    before { login(user) }
+
+    subject { post :create, params: { question_id: question, user_id: user, answer: answer_params } }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -42,6 +32,11 @@ RSpec.describe AnswersController, type: :controller do
         subject
         expect(response).to redirect_to question_path(question)
       end
+
+      it 'answer made by current user' do
+        subject
+        expect(assigns(:answer).user).to eq user
+      end
     end
 
     context 'with invalid attributes' do
@@ -53,56 +48,95 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-render new answer view' do
         subject
-        expect(response).to render_template :new
+        expect(response).to render_template 'questions/show'
       end
     end
   end
 
   describe 'PATCH #update' do
-    before { patch :update, params: { question_id: question, id: answer, answer: answer_params } }
+    context 'answer was made by current user' do
+      before { login(user) }
 
-    context 'with valid attributes' do
-      let(:answer_params) { { body: 'new body' } }
+      before { patch :update, params: { question_id: question, user_id: user, id: answer, answer: answer_params } }
 
-      it 'assigns the requested answer to @answer' do
-        expect(assigns(:answer)).to eq answer
+      context 'with valid attributes' do
+        let(:answer_params) { { body: 'new body' } }
+
+        it 'assigns the requested answer to @answer' do
+          expect(assigns(:answer)).to eq answer
+        end
+
+        it 'changes answer attributes' do
+          expect(answer.reload.body).to eq 'new body'
+        end
+
+        it "redirect to answer's question" do
+          expect(response).to redirect_to question_path(answer.question)
+        end
       end
 
-      it 'changes answer attributes' do
-        expect(answer.reload.body).to eq 'new body'
-      end
+      context 'with invalid attributes' do
+        let(:answer_params) { attributes_for(:answer, :invalid) }
 
-      it "redirect to answer's question" do
-        expect(response).to redirect_to question_path(answer.question)
+        it 'does not change answer' do
+          expect(answer.reload.body).to eq answer.body
+        end
+
+        it 're-render edit answer view' do
+          expect(response).to render_template :edit
+        end
       end
     end
 
-    context 'with invalid attributes' do
-      let(:answer_params) { attributes_for(:answer, :invalid) }
+    context 'answer was not made by current user' do
+      before { login(wrong_user) }
 
-      it 'does not change answer' do
-        expect(answer.reload.body).to eq 'MyText'
-      end
+      before { patch :update, params: { question_id: question, user_id: user, id: answer, answer: answer_params } }
 
-      it 're-render edit answer view' do
-        expect(response).to render_template :edit
+      context 'with attributes' do
+        let(:answer_params) { { body: 'new body' } }
+
+        it 'no changes in answer attributes' do
+          expect(answer.reload.body).to_not eq 'new body'
+        end
       end
     end
   end
 
   describe 'DELETE #destroy' do
-    let!(:question) { create(:question) }
-    let!(:answer) { create(:answer, question: question) }
+    context 'answer was made by current user' do
+      before { login(user) }
 
-    subject { delete :destroy, params: { question_id: question, id: answer } }
+      let!(:question) { create(:question) }
+      let!(:answer) { create(:answer, question: question, user: user) }
 
-    it 'deletes the answer' do
-      expect { subject }.to change(Answer, :count).by(-1)
+      subject { delete :destroy, params: { question_id: question, user_id: user, id: answer } }
+
+      it 'deletes the answer' do
+        expect { subject }.to change(Answer, :count).by(-1)
+      end
+
+      it "redirect to answer's question" do
+        subject
+        expect(response).to redirect_to question_path(question)
+      end
     end
 
-    it "redirect to answer's question" do
-      subject
-      expect(response).to redirect_to question_path(question)
+    context 'answer was not made by current user' do
+      before { login(wrong_user) }
+      let!(:question) { create(:question) }
+      let!(:answer) { create(:answer, question: question, user: user) }
+
+      subject { delete :destroy, params: { question_id: question, user_id: user, id: answer } }
+
+      it 'not deletes from database' do
+        expect { subject }.to change(Answer, :count).by(0)
+      end
+
+      it "redirect to answer's question" do
+        subject
+        expect(response).to redirect_to question_path(question)
+      end
     end
   end
 end

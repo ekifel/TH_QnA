@@ -1,0 +1,20 @@
+= render 'shared/errors', resource: answer
+
+h1= question.title
+p= question.body
+
+- if current_user&.is_author?(question)
+  = link_to 'Delete question', question_path(question), method: :delete
+
+h3= "#{question.answers.count} Answers"
+
+- answers.each do |answer|
+  - next unless answer.persisted?
+  p= answer.body
+  - if current_user&.is_author?(answer)
+    = link_to 'Delete answer', answer_path(answer), method: :delete
+
+= form_with model: [question, answer], local: true do |f|
+  = f.label :body
+  = f.text_area :body
+  = f.submit 'Post Your Answer'

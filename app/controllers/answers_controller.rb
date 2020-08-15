@@ -1,30 +1,31 @@
 class AnswersController < ApplicationController
-  def show; end
-
-  def new; end
+  before_action :authenticate_user!
 
   def edit; end
 
   def create
+    answer.user = current_user
     if answer.save
-      redirect_to question_path(question)
+      redirect_to question_path(answer.question), notice: 'Your answer posted successfully'
     else
-      render :new
+      render 'questions/show', locals: { model: [answer.question, answer] }
     end
   end
 
   def update
-    if answer.update(answer_params)
-      redirect_to question_path(question)
+    if current_user.is_author?(answer) && answer.update(answer_params)
+      redirect_to question_path(answer.question), notice: 'Answer updated successfully'
     else
       render :edit
     end
   end
 
   def destroy
-    answer.destroy
-
-    redirect_to question_path(question)
+    if current_user.is_author?(answer) && answer.destroy
+      redirect_to question_path(answer.question), notice: 'Your answer deleted successfully'
+    else
+      redirect_to question_path(answer.question), alert: "You don't have permission to delete this answer"
+    end
   end
 
   private
@@ -35,13 +36,19 @@ class AnswersController < ApplicationController
 
   helper_method :answer
 
-  def answer_params
-    params.require(:answer).permit(:body)
-  end
-
   def question
     @question ||= Question.find(params[:question_id])
   end
 
   helper_method :question
+
+  def answers
+    @answers ||= question.answers
+  end
+
+  helper_method :answers
+
+  def answer_params
+    params.require(:answer).permit(:body)
+  end
 end
