@@ -1,5 +1,3 @@
-= render 'shared/errors', resource: answer
-
 h1= question.title
 p= question.body
 
@@ -8,13 +6,15 @@ p= question.body
 
 h3= "#{question.answers.count} Answers"
 
-- answers.each do |answer|
-  - next unless answer.persisted?
-  p= answer.body
-  - if current_user&.is_author?(answer)
-    = link_to 'Delete answer', answer_path(answer), method: :delete
+.answers
+  = render answers
 
-= form_with model: [question, answer], local: true do |f|
-  = f.label :body
-  = f.text_area :body
-  = f.submit 'Post Your Answer'
+.answer_errors
+  = render 'shared/errors', resource: answer
+
+= form_with model: [question, answer], class: 'new-answer' do |f|
+  = f.label :body, class: 'mt-2'
+  = f.text_area :body, rows: 4, class: 'form-control mt-1'
+  = f.submit 'Post Your Answer', class: 'btn btn-primary mt-2'
+
+p= link_to 'Back', questions_path, class: 'btn btn-outline-primary mt-2'

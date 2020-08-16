@@ -8,7 +8,7 @@ feature 'User can create answer', %q{
 
   given!(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     given(:user) { create(:user) }
 
     background do
@@ -20,6 +20,7 @@ feature 'User can create answer', %q{
       fill_in 'Body', with: 'Answer body'
       click_on 'Post Your Answer'
 
+      expect(current_path).to eq question_path(question)
       expect(page).to have_content 'Your answer posted successfully'
       expect(page).to have_content 'Answer body'
     end

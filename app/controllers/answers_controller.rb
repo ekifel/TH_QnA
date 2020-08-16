@@ -1,23 +1,17 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
-  def edit; end
-
   def create
     answer.user = current_user
-    if answer.save
-      redirect_to question_path(answer.question), notice: 'Your answer posted successfully'
-    else
-      render 'questions/show', locals: { model: [answer.question, answer] }
+    answer.save
+    respond_to do |format|
+      format.js { flash.now[:notice] = 'Your answer posted successfully' }
     end
   end
 
   def update
-    if current_user.is_author?(answer) && answer.update(answer_params)
-      redirect_to question_path(answer.question), notice: 'Answer updated successfully'
-    else
-      render :edit
-    end
+    answer.update(answer_params)
+    @question = answer.question
   end
 
   def destroy
