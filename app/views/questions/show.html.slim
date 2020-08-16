@@ -1,8 +1,5 @@
-h1= question.title
-p= question.body
-
-- if current_user&.is_author?(question)
-  = link_to 'Delete question', question_path(question), method: :delete
+div class="question"
+  = render question
 
 h3= "#{question.answers.count} Answers"
 
@@ -10,8 +7,6 @@ h3= "#{question.answers.count} Answers"
   = render answers
 
 .answer_errors
-  = render 'shared/errors', resource: answer
-
 = form_with model: [question, answer], class: 'new-answer' do |f|
   = f.label :body, class: 'mt-2'
   = f.text_area :body, rows: 4, class: 'form-control mt-1'

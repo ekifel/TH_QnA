@@ -3,22 +3,24 @@ class AnswersController < ApplicationController
 
   def create
     answer.user = current_user
-    answer.save
-    respond_to do |format|
-      format.js { flash.now[:notice] = 'Your answer posted successfully' }
+    if answer.save
+      respond_to do |format|
+        format.js { flash.now[:notice] = 'Your answer posted successfully' }
+      end
     end
   end
 
   def update
-    answer.update(answer_params)
-    @question = answer.question
+    answer.update(answer_params) if current_user.is_author?(answer)
   end
 
   def destroy
     if current_user.is_author?(answer) && answer.destroy
-      redirect_to question_path(answer.question), notice: 'Your answer deleted successfully'
+      respond_to do |format|
+        format.js { flash.now[:notice] = 'Your answer deleted successfully' }
+      end
     else
-      redirect_to question_path(answer.question), alert: "You don't have permission to delete this answer"
+      redirect_to question_path(question)
     end
   end
 

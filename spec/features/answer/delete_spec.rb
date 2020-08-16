@@ -16,9 +16,11 @@ feature 'User can delete his answer', %q{
       given!(:question) { create(:question, user: user) }
       given!(:answer) { create(:answer, question: question, user: user) }
 
-      scenario 'answer deletes successfully' do
+      scenario 'answer deletes successfully', js: true do
         visit question_path(question)
-        click_on 'Delete answer'
+        within("#answer-id-#{answer.id}") do
+          click_on 'Delete'
+        end
 
         expect(page).to have_content 'Your answer deleted successfully'
         expect(page).to_not have_content answer.body
@@ -29,10 +31,12 @@ feature 'User can delete his answer', %q{
       given!(:question) { create(:question, user: user) }
       given!(:answer) { create(:answer, question: question, user: wrong_user) }
 
-      scenario 'answer not deletes' do
+      scenario 'user can not see button' do
         visit question_path(question)
 
-        expect(page).to_not have_link 'Delete answer'
+        within("#answer-id-#{answer.id}") do
+          expect(page).to_not have_link 'Delete'
+        end
       end
     end
   end
@@ -41,10 +45,12 @@ feature 'User can delete his answer', %q{
     given!(:question) { create(:question) }
     given!(:answer) { create(:answer, question: question) }
 
-    scenario 'can not delete any answers' do
+    scenario 'can not see delete button' do
       visit question_path(question)
 
-      expect(page).to_not have_link 'Delete answer'
+      within("#answer-id-#{answer.id}") do
+        expect(page).to_not have_link 'Delete'
+      end
     end
   end
 end

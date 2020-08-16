@@ -14,9 +14,7 @@
       <div class="col col-md-8">
         <%= render 'shared/nav' %>
         <div id="flash">
-          <% if notice.present? %>
-            <%= render partial: 'shared/flash' %>
-          <% end %>
+          <%= render partial: 'shared/flash' %>
         </div>
         <%= yield %>
       </div>

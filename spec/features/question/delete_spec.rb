@@ -12,12 +12,14 @@ feature 'User can delete his question', %q{
 
     background { sign_in(user) }
 
-    context 'can delete his question' do
+    context 'can delete his question'do
       given!(:question) { create(:question, user: user) }
 
       scenario 'question deletes successfully' do
         visit question_path(question)
-        click_on 'Delete question'
+        within('.question') do
+          click_on 'Delete'
+        end
 
         expect(page).to have_content 'Your question deleted successfully'
         expect(page).to_not have_content question.title
@@ -29,7 +31,10 @@ feature 'User can delete his question', %q{
 
       scenario 'delete question button does not exist' do
         visit question_path(question)
-        expect(page).to_not have_link 'Delete answer'
+
+        within('.question') do
+          expect(page).to_not have_link 'Delete'
+        end
       end
     end
   end
@@ -41,7 +46,9 @@ feature 'User can delete his question', %q{
     scenario 'can not delete any questions' do
       visit question_path(question)
 
-      expect(page).to_not have_link 'Delete question'
+      within('.question') do
+        expect(page).to_not have_link 'Delete'
+      end
     end
   end
 end

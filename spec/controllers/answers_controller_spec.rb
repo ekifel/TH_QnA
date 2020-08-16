@@ -9,7 +9,7 @@ RSpec.describe AnswersController, type: :controller do
   describe 'POST #create' do
     before { login(user) }
 
-    subject { post :create, params: { question_id: question, user_id: user, answer: answer_params }, format: :js }
+    subject { post :create, params: { question_id: question, answer: answer_params }, format: :js }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -20,7 +20,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it "redirect to answer's question view" do
         subject
-        expect(response).to redirect_to question_path(question)
+        expect(response).to render_template :create
       end
 
       it 'answer made by current user' do
@@ -47,7 +47,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'answer was made by current user' do
       before { login(user) }
 
-      before { patch :update, params: { question_id: question, user_id: user, id: answer, answer: answer_params } }
+      before { patch :update, params: { question_id: question, id: answer, answer: answer_params }, format: :js }
 
       context 'with valid attributes' do
         let(:answer_params) { { body: 'new body' } }
@@ -61,7 +61,7 @@ RSpec.describe AnswersController, type: :controller do
         end
 
         it "redirect to answer's question" do
-          expect(response).to redirect_to question_path(answer.question)
+          expect(response).to render_template :update
         end
       end
 
@@ -73,7 +73,7 @@ RSpec.describe AnswersController, type: :controller do
         end
 
         it 're-render edit answer view' do
-          expect(response).to render_template :edit
+          expect(response).to render_template "answers/update"
         end
       end
     end
@@ -81,7 +81,7 @@ RSpec.describe AnswersController, type: :controller do
     context 'answer was not made by current user' do
       before { login(wrong_user) }
 
-      before { patch :update, params: { question_id: question, user_id: user, id: answer, answer: answer_params } }
+      before { patch :update, params: { question_id: question, id: answer, answer: answer_params }, format: :js }
 
       context 'with attributes' do
         let(:answer_params) { { body: 'new body' } }
@@ -100,7 +100,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: user) }
 
-      subject { delete :destroy, params: { question_id: question, user_id: user, id: answer } }
+      subject { delete :destroy, params: { question_id: question, id: answer }, format: :js }
 
       it 'deletes the answer' do
         expect { subject }.to change(Answer, :count).by(-1)
@@ -108,7 +108,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it "redirect to answer's question" do
         subject
-        expect(response).to redirect_to question_path(question)
+        expect(response).to render_template :destroy
       end
     end
 
@@ -117,7 +117,7 @@ RSpec.describe AnswersController, type: :controller do
       let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: user) }
 
-      subject { delete :destroy, params: { question_id: question, user_id: user, id: answer } }
+      subject { delete :destroy, params: { question_id: question, id: answer }, format: :js }
 
       it 'not deletes from database' do
         expect { subject }.to change(Answer, :count).by(0)

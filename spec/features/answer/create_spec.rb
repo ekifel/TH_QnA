@@ -25,7 +25,7 @@ feature 'User can create answer', %q{
       expect(page).to have_content 'Answer body'
     end
 
-    scenario 'tries to post empty answer' do
+    scenario 'tries to post empty answer', js: true do
       click_on 'Post Your Answer'
 
       expect(page).to have_content "Body can't be blank"
