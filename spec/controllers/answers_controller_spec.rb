@@ -6,20 +6,10 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question, user: user) }
 
-  describe 'GET #edit' do
-    before { login(user) }
-
-    before { get :edit, params: { question_id: question, id: answer } }
-
-    it 'render edit view' do
-      expect(response).to render_template :edit
-    end
-  end
-
   describe 'POST #create' do
     before { login(user) }
 
-    subject { post :create, params: { question_id: question, user_id: user, answer: answer_params } }
+    subject { post :create, params: { question_id: question, user_id: user, answer: answer_params }, format: :js }
 
     context 'with valid attributes' do
       let(:answer_params) { attributes_for(:answer) }
@@ -48,7 +38,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 're-render new answer view' do
         subject
-        expect(response).to render_template 'questions/show'
+        expect(response).to render_template :create
       end
     end
   end
