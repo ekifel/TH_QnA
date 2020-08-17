@@ -45,7 +45,7 @@ class QuestionsController < ApplicationController
   helper_method :questions
 
   def answers
-    @answers ||= question.answers
+    @answers ||= question.answers.sort_by_best
   end
 
   helper_method :answers

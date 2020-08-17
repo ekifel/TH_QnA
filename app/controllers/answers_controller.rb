@@ -5,7 +5,7 @@ class AnswersController < ApplicationController
     answer.user = current_user
     if answer.save
       respond_to do |format|
-        format.js { flash.now[:notice] = 'Your answer posted successfully' }
+        format.js { flash.now[:notice] = 'Your answer posted successfully!' }
       end
     end
   end
@@ -17,11 +17,15 @@ class AnswersController < ApplicationController
   def destroy
     if current_user.is_author?(answer) && answer.destroy
       respond_to do |format|
-        format.js { flash.now[:notice] = 'Your answer deleted successfully' }
+        format.js { flash.now[:notice] = 'Your answer deleted successfully!' }
       end
     else
       redirect_to question_path(question)
     end
+  end
+
+  def choose_as_best
+    answer.select_best if current_user.is_author?(answer.question)
   end
 
   private

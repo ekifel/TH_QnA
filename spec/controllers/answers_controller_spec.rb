@@ -114,6 +114,7 @@ RSpec.describe AnswersController, type: :controller do
 
     context 'answer was not made by current user' do
       before { login(wrong_user) }
+
       let!(:question) { create(:question) }
       let!(:answer) { create(:answer, question: question, user: user) }
 
@@ -127,6 +128,38 @@ RSpec.describe AnswersController, type: :controller do
         subject
         expect(response).to redirect_to question_path(question)
       end
+    end
+  end
+
+  describe 'CHOOSE_AS_BEST #patch' do
+    let(:user) { create(:user) }
+    let!(:question) { create(:question, user: user) }
+    let!(:answer) { create(:answer, question: question) }
+
+    context 'user is question owner' do
+      before { login(user) }
+
+      context 'choose best answer first time' do
+        before { patch :choose_as_best, params: { id: answer, format: :js } }
+
+        it { expect(response).to render_template :choose_as_best }
+        it { expect(question.reload.best_answer).to eq answer }
+      end
+
+      context 'choose best answer when it already exist' do
+        let!(:best_answer) { create(:answer, question: question, best: true) }
+
+        before { patch :choose_as_best, params: { id: answer, format: :js } }
+
+        it { expect(response).to render_template :choose_as_best }
+        it { expect(question.reload.best_answer).to eq answer }
+      end
+    end
+
+    context 'user is not question owner' do
+      before { patch :choose_as_best, params: { id: answer, format: :js } }
+
+      it { expect(question.reload.best_answer).to_not eq answer }
     end
   end
 end
