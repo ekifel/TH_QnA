@@ -1,0 +1,9 @@
+.question_errors
+  = render 'shared/errors', resource: question
+
+= form_with model: question, class: "form-group #{'hidden' if hidden}", html: { id: "question-id-#{question.id}" } do |f|
+  = f.label :title, class: 'mt-2'
+  = f.text_field :title, class: 'form-control'
+  = f.label :body, class: 'mt-2'
+  = f.text_area :body, class: 'form-control'
+  = f.submit 'Save', class: 'btn btn-primary mt-2'

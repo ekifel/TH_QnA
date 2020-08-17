@@ -7,6 +7,7 @@ FactoryBot.define do
     body
     question
     user
+    best { false }
 
     trait :invalid do
       body { nil }

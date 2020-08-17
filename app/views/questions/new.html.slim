@@ -1,12 +1,5 @@
-= render 'shared/errors', resource: @question
-
 h3 class='mt-2' = "Ask your question"
 
-= form_with model: @question, local: true, class: 'form-group' do |f|
-  = f.label :title, class: 'mt-2'
-  = f.text_field :title, class: 'form-control'
-  = f.label :body, class: 'mt-2'
-  = f.text_area :body, class: 'form-control'
-  = f.submit 'Ask', class: 'btn btn-primary mt-2'
+= render 'form', hidden: false
 
-=link_to 'Back', questions_path, class: 'btn btn-outline-primary'
+= link_to 'Back', questions_path, class: 'btn btn-outline-primary'
