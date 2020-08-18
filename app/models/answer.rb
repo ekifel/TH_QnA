@@ -4,6 +4,8 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
+  has_many_attached :files
+
   scope :best_answer, -> { where(best: true) }
   scope :sort_by_best, -> { order(best: :desc) }
 

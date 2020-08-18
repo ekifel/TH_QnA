@@ -16,7 +16,7 @@ feature 'User can create answer', %q{
       visit question_path(question)
     end
 
-    scenario 'is answer to the question' do
+    scenario 'tries to post correct answer to question' do
       fill_in 'Body', with: 'Answer body'
       click_on 'Post Your Answer'
 
@@ -29,6 +29,29 @@ feature 'User can create answer', %q{
       click_on 'Post Your Answer'
 
       expect(page).to have_content "Body can't be blank"
+    end
+
+    scenario 'tries to post answer with attached file' do
+      fill_in 'Body', with: 'Answer body'
+      attach_file 'Files', "#{Rails.root}/spec/rails_helper.rb"
+      click_on 'Post Your Answer'
+
+      within '.answers' do
+        expect(page).to have_content('Answer body')
+        expect(page).to have_link('rails_helper.rb')
+      end
+    end
+
+    scenario 'tries to post answer with several attached file' do
+      fill_in 'Body', with: 'Answer body'
+      attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+      click_on 'Post Your Answer'
+
+      within '.answers' do
+        expect(page).to have_content('Answer body')
+        expect(page).to have_link('rails_helper.rb')
+        expect(page).to have_link('spec_helper.rb')
+      end
     end
   end
 

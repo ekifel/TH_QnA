@@ -4,3 +4,5 @@ h1= question.title
   = link_to 'Edit', '#', class: 'edit-question-link float-right mr-4', data: { question_id: question.id }
   = render 'form', hidden: true
 p= question.body
+- if question.files.attached?
+  = render question.files

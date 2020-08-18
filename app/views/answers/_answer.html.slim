@@ -7,12 +7,16 @@ div id="answer-id-#{answer.id}" class="mt-3"
     = answer.body
   - if current_user&.is_author?(answer.question)
     = link_to 'Best', choose_as_best_answer_path(answer), method: :patch, remote: true, class: 'float-right'
+    - if current_user&.is_author?(answer)
+      = link_to 'Delete', answer_path(answer), class: 'float-right mr-4', method: :delete, remote: true
+      = link_to 'Edit', '#', class: 'edit-answer-link float-right mr-4', data: {answer_id: answer.id}
 
-  - if current_user&.is_author?(answer)
-    = link_to 'Delete', answer_path(answer), class: 'float-right mr-4', method: :delete, remote: true
-    = link_to 'Edit', '#', class: 'edit-answer-link float-right mr-4', data: { answer_id: answer.id }
+  .attachments
+    = render answer.files
 
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
     = f.label :body, 'Your answer'
     = f.text_area :body
+    = f.label :files
+    = f.file_field :files, multiple: true
     = f.submit 'Save'
