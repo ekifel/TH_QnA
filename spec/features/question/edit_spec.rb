@@ -10,9 +10,9 @@ feature 'User can edit his question', %q{
     given(:user) { create(:user) }
     given!(:question) { create(:question, user: user) }
     background { sign_in user }
+    background { visit question_path(question) }
 
     scenario 'edits his question' do
-      visit question_path(question)
       within '.question' do
         click_on 'Edit'
         fill_in 'Title', with: 'new title'
@@ -28,7 +28,6 @@ feature 'User can edit his question', %q{
     end
 
     scenario 'edits his question with mistakes' do
-      visit question_path(question)
       within '.question' do
         click_on 'Edit'
         fill_in 'Title', with: ''
@@ -50,6 +49,41 @@ feature 'User can edit his question', %q{
 
         within '.question' do
           expect(page).to_not have_link 'Edit'
+        end
+      end
+    end
+
+    scenario 'edits his question with attaches file' do
+      within ".question" do
+        click_on 'Edit'
+        attach_file 'Files', "#{Rails.root}/spec/rails_helper.rb"
+        click_on 'Save'
+
+        expect(page).to have_link 'rails_helper.rb'
+      end
+    end
+
+    scenario 'edits his question with several attaches file' do
+      within ".question" do
+        click_on 'Edit'
+        attach_file 'Files', ["#{Rails.root}/spec/rails_helper.rb", "#{Rails.root}/spec/spec_helper.rb"]
+        click_on 'Save'
+
+        expect(page).to have_link 'rails_helper.rb'
+        expect(page).to have_link 'spec_helper.rb'
+      end
+    end
+
+    context 'can delete attachment' do
+      given!(:question) { create(:question, :with_file, user: user) }
+      given!(:attachment) { question.files.first }
+
+      scenario 'file deletes' do
+        within ".question" do
+          within "#attachment-id-#{attachment.id}" do
+            click_on 'Delete'
+          end
+          expect(page).to_not have_content(attachment.filename.to_s)
         end
       end
     end

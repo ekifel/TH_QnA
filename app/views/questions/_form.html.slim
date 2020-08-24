@@ -6,4 +6,6 @@
   = f.text_field :title, class: 'form-control'
   = f.label :body, class: 'mt-2'
   = f.text_area :body, class: 'form-control'
+  = f.label :files, class: 'mt-2'
+  = f.file_field :files, multiple: true, class: 'form-control'
   = f.submit 'Save', class: 'btn btn-primary mt-2'
