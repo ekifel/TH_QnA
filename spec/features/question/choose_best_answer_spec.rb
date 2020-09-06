@@ -12,8 +12,9 @@ feature "Question's owner can choose best answer", %q{
     background { sign_in(user) }
 
     context 'is question owner' do
+      given!(:question) { create(:question, :with_reward, user: user) }
+
       context 'with one answer' do
-        given!(:question) { create(:question, user: user) }
         given!(:answer) { create(:answer, question: question) }
 
         scenario 'can select best answer' do
@@ -22,13 +23,13 @@ feature "Question's owner can choose best answer", %q{
           within("#answer-id-#{answer.id}") { click_on 'Best' }
           within('.best-answer') do
             expect(page).to have_content 'This answer is best'
+            expect(page).to have_css("img[src*='reward.png']")
             expect(page).to have_content answer.body
           end
         end
       end
 
       context 'with more answers' do
-        given!(:question) { create(:question, user: user) }
         given!(:answer) { create(:answer, question: question) }
 
         context 'when best answer already exist' do
@@ -39,7 +40,9 @@ feature "Question's owner can choose best answer", %q{
 
             within("#answer-id-#{answer.id}") { click_on 'Best' }
             within '.best-answer' do
+
               expect(page).to have_content answer.body
+              expect(page).to have_css("img[src*='reward.png']")
               expect(page).to_not have_content best_answer.body
             end
           end

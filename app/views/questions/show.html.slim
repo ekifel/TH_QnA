@@ -8,10 +8,13 @@ h3= "#{question.answers.count} Answers"
 
 .answer_errors
 = form_with model: [question, answer], class: 'new-answer' do |f|
-  = f.label :body, class: 'mt-2'
+  = f.label :body, 'Your answer', class: 'mt-2'
   = f.text_area :body, rows: 4, class: 'form-control mt-1'
   = f.label :files, class: 'mt-2'
   = f.file_field :files, multiple: true, class: 'form-control mt-1'
+  #new-links
+    .links
+      = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
   = f.submit 'Post Your Answer', class: 'btn btn-primary mt-2'
 
 p= link_to 'Back', questions_path, class: 'btn btn-outline-primary mt-2'
