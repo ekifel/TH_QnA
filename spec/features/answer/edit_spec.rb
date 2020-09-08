@@ -7,6 +7,7 @@ feature 'User can edit his answer', %q{
 } do
 
   given!(:user) { create(:user) }
+  given!(:wrong_user) { create(:user) }
   given!(:question) { create(:question) }
   given!(:answer) { create(:answer, question: question, user: user) }
 
@@ -21,6 +22,8 @@ feature 'User can edit his answer', %q{
     background { visit question_path(question) }
 
     scenario 'edits his answer' do
+      click_on 'Edit'
+
       within '.answers' do
         fill_in 'Your answer', with: 'edited answer'
         click_on 'Save'
@@ -81,10 +84,57 @@ feature 'User can edit his answer', %q{
     end
 
     context "other user's answer" do
+      given!(:wrong_answer) { create(:answer, question: question, user: wrong_user) }
+
       scenario "tries to edit other user's answer" do
         within "#answer-id-#{wrong_answer.id}" do
           expect(page).to_not have_link 'Edit'
         end
+      end
+    end
+
+    context 'add links:' do
+      given(:url) { 'https://gist.github.com/ekifel/4a058cb88bf37fba63c4d4513b98de77' }
+
+      scenario 'can add link to answer' do
+        within '.answers' do
+          click_on 'Edit'
+
+          within "#new-links" do
+            click_on 'Add link'
+            fill_in 'Link name', with: 'My Gist'
+            fill_in 'Link url', with: url
+          end
+        end
+
+        click_on 'Save'
+        expect(page).to have_link 'Link name', href: url
+      end
+
+      scenario 'can add several links to answer' do
+        within '.answers' do
+          click_on 'Edit'
+
+          within "#new-links" do
+            within first('.nested-fields') do
+              click_on 'Add link'
+              fill_in 'Link name', with: 'My Gist'
+              fill_in 'Link url', with: url
+            end
+
+            within '.add_fields' do
+              click_on 'Add link'
+            end
+
+            within all('.nested-fields')[1] do
+              fill_in 'Link name', with: 'My Gist 2'
+              fill_in 'Link url', with: url
+            end
+          end
+        end
+
+        expect(page).to have_content 'My Gist'
+        expect(page).to have_content 'My Gist 2'
       end
     end
   end

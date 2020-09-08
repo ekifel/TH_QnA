@@ -22,5 +22,26 @@ FactoryBot.define do
         question.files.attach fixture_file_upload("#{Rails.root}/spec/spec_helper.rb")
       end
     end
+
+    trait :with_reward do
+      before :create do |question|
+        create(:reward,
+               question: question,
+               title: 'Reward title',
+               image: fixture_file_upload(Rails.root.join('spec', 'images', 'reward.png')))
+      end
+    end
+
+    trait :with_link do
+      before :create do |question|
+        create(:link, linkable: question)
+      end
+    end
+
+    trait :with_links do
+      before :create do |question|
+        create_list(:link, 3, linkable: question)
+      end
+    end
   end
 end

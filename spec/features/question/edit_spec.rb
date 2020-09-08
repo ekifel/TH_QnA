@@ -87,6 +87,60 @@ feature 'User can edit his question', %q{
         end
       end
     end
+
+    describe 'edit attached links' do
+      given(:url) { 'https://google.com' }
+
+      scenario 'tries to add link' do
+        within '.question' do
+          click_on 'Edit'
+
+          fill_in 'Link name', with: 'link to google'
+          fill_in 'Link url', with: url
+
+          click_on 'Save'
+        end
+
+        expect(page).to have_link 'link to google', href: url
+      end
+
+      scenario 'tries to add several links' do
+        within '.question' do
+          within first('.nested-fields') do
+            fill_in 'Link name', with: 'link to google'
+            fill_in 'Link url', with: url
+          end
+
+          within '.add_fields' do
+            click_on 'Add link'
+          end
+
+          within all('.nested-fields')[1] do
+            fill_in 'Link name', with: 'another link to google'
+            fill_in 'Link url', with: url
+          end
+
+          click_on 'Save'
+        end
+
+        expect(page).to have_link 'link to google', href: url
+        expect(page).to have_link 'another link to google', href: url
+      end
+
+      context 'tries to delete attached link' do
+        given!(:question) { create(:question, :with_link, user: user) }
+
+        scenario 'link successfully deleted' do
+          within '.question' do
+            click_on 'Edit'
+            click_on 'Delete link'
+            click_on 'Save'
+          end
+
+          expect(page).to_not have_content question.links.first.name
+        end
+      end
+    end
   end
 
   describe 'Unauthenticated user' do
