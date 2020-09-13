@@ -8,6 +8,7 @@ RSpec.describe Question, type: :model do
     it { should have_db_column(:user_id).of_type(:integer) }
     it { should accept_nested_attributes_for :links }
     it { should have_one(:reward).dependent(:destroy) }
+    it_behaves_like 'rateable'
   end
 
   describe 'validations' do

@@ -1,0 +1,21 @@
+p class = "#{resource.class.name.downcase}-rating"
+  = resource.rating
+
+.rate-actions
+  = link_to '+',
+          [:rate_up, resource],
+          class: 'mr-2',
+          method: :patch,
+          data: { type: :json },
+          remote: true
+  = link_to '-',
+          [:rate_down, resource],
+          class: 'mr-2',
+          method: :patch,
+          data: {type: :json},
+          remote: true
+  = link_to 'cancel vote',
+          [:cancel_vote, resource],
+          method: :delete,
+          data: {type: :json},
+          remote: true

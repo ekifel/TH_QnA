@@ -3,6 +3,8 @@ class Answer < ApplicationRecord
   belongs_to :user
   has_many :links, dependent: :destroy, as: :linkable
 
+  include Rateable
+
   accepts_nested_attributes_for :links, reject_if: :all_blank
 
   validates :body, presence: true

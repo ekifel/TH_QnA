@@ -1,6 +1,8 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
 
+  include Rated
+
   def create
     answer.user = current_user
     if answer.save
