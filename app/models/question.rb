@@ -4,6 +4,8 @@ class Question < ApplicationRecord
   has_one :reward, dependent: :destroy
   belongs_to :user
 
+  include Rateable
+
   has_many_attached :files
 
   accepts_nested_attributes_for :links, reject_if: :all_blank

@@ -162,4 +162,6 @@ RSpec.describe AnswersController, type: :controller do
       it { expect(question.reload.best_answer).to_not eq answer }
     end
   end
+
+  include_examples 'rated_actions', :answer
 end
