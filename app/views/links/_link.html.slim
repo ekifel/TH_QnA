@@ -7,5 +7,5 @@
         p = meta.content
     - else
       = link_to link.name, url_for(link.url)
-    -if current_user.is_author?(link.linkable)
+    -if current_user&.is_author?(link.linkable)
       = link_to 'Delete', link_path(link), method: :delete, remote: true, class: 'float-right'

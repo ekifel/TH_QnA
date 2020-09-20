@@ -23,6 +23,13 @@ div id="answer-id-#{answer.id}" class="mt-3"
     - if !current_user&.is_author?(answer)
       = render 'shared/rates', resource: answer
 
+  .comment-errors
+  .comments
+    = render answer.comments
+
+  .new-comment
+    = render 'shared/new_comment', resource: answer
+
   = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
     = f.label :body, 'Your answer'
     p

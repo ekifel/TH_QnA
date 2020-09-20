@@ -4,6 +4,7 @@ class Answer < ApplicationRecord
   has_many :links, dependent: :destroy, as: :linkable
 
   include Rateable
+  include Commentable
 
   accepts_nested_attributes_for :links, reject_if: :all_blank
 

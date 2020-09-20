@@ -1,0 +1,6 @@
+- if user_signed_in?
+  = form_with model: [resource, resource.comments.build], url: polymorphic_path([:create_comment, resource]) do |f|
+    p
+      = f.label :body
+      = f.text_area :body
+      = f.submit 'Post Comment'
