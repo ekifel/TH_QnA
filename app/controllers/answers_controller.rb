@@ -30,7 +30,9 @@ class AnswersController < ApplicationController
   end
 
   def choose_as_best
-    answer.select_best if current_user.is_author?(answer.question)
+    if current_user.is_author?(answer.question) && answer.question.reward
+      answer.select_best
+    end
   end
 
   private
@@ -40,12 +42,11 @@ class AnswersController < ApplicationController
 
     AnswersChannel.broadcast_to(
         "answers_#{question.id}",
-        {
-            answer: answer,
-            template: render_to_string(partial: 'answers/answer', locals: { resource: answer, current_user: nil })
-        }
+        answer: answer,
+        links: answer.links
     )
   end
+
 
   def answer
     @answer ||= Answer.with_attached_files.find_by(id: params[:id]) || question.answers.new(answer_params)

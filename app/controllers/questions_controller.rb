@@ -1,5 +1,6 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+  before_action :set_question_owner_id, only: :show
 
   after_action :publish_question, only: :create
 
@@ -46,6 +47,10 @@ class QuestionsController < ApplicationController
     return if question.errors.any?
 
     QuestionsChannel.broadcast_to('questions', question)
+  end
+
+  def set_question_owner_id
+    gon.question_owner_id = question.user.id
   end
 
   def question

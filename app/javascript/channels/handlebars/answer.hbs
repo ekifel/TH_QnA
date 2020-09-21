@@ -1,0 +1,28 @@
+<div id="answer-id-{{answer.id}}" class="mt-3">
+    {{answer.body}}
+    {{#if is_answer_owner}}
+        <a class="float-right" data-remote="true" rel="nofollow" data-method="delete" href="/answers/{{answer.id}}">Delete</a>
+        <a class="edit-answer-link float-right mr-4" data-answer-id="{{answer.id}}" href="#">Edit</a>
+    {{/if}}
+    {{#if is_question_owner}}
+        <a class="float-right mr-4" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/choose_as_best">Best</a>
+    {{/if}}
+    <div class="attached-links">
+        {{#each links}}
+            <div id="link-id-{{this.id}}">
+                <a href="{{this.url}}">{{this.name}}</a>
+            </div>
+        {{/each}}
+    </div>
+    {{#if is_answer_owner}}
+    {{else}}
+        <div class="answer-rates">
+            <p class="answer-rating">0</p>
+            <div class="rate-actions">
+                <a class="mr-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/rate_up">+</a>
+                <a class="mr-2" data-type="json" data-remote="true" rel="nofollow" data-method="patch" href="/answers/{{answer.id}}/rate_down">-</a>
+                <a data-type="json" data-remote="true" rel="nofollow" data-method="delete" href="/answers/{{answer.id}}/cancel_vote">cancel vote</a>
+            </div>
+        </div>
+    {{/if}}
+</div>

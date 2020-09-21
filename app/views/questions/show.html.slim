@@ -1,10 +1,11 @@
 div class="question"
   = render question
 
-h3= "#{question.answers.count} Answers"
+h3 = "#{question.answers.count} Answers"
 
 .answers
-  = render answers
+  div id="question-#{question.id}-answers"
+    = render answers
 
 .answer_errors
 = form_with model: [question, answer], class: 'new-answer' do |f|

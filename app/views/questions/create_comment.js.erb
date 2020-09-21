@@ -1,5 +1,2 @@
 $('.comment-errors').html('<%= render 'shared/errors', resource: comment %>');
 
-<% if comment.persisted? %>
-  $('#question-<%= record.id %> .comments').prepend('<%= j render comment  %>')
-<% end %>
