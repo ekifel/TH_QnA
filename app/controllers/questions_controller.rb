@@ -1,12 +1,17 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
+  before_action :set_question_owner_id, only: :show
+
+  after_action :publish_question, only: :create
 
   include Rated
+  include Commented
 
   def index; end
 
   def show
     answer.links.build
+    gon.question_id = question.id
   end
 
   def new
@@ -37,6 +42,16 @@ class QuestionsController < ApplicationController
   end
 
   private
+
+  def publish_question
+    return if question.errors.any?
+
+    QuestionsChannel.broadcast_to('questions', question)
+  end
+
+  def set_question_owner_id
+    gon.question_owner_id = question.user.id
+  end
 
   def question
     @question ||= params[:id] ? Question.with_attached_files.find(params[:id]) : Question.new(question_params)

@@ -1,16 +1,24 @@
-h1= question.title
-- if current_user&.is_author?(question)
-  = link_to 'Delete', question_path(question), class: 'float-right', method: :delete
-  = link_to 'Edit', '#', class: 'edit-question-link float-right mr-4', data: { question_id: question.id }
-  = render 'form', hidden: true
-p= question.body
+div id="question-#{question.id}"
+  h1= question.title
+  - if current_user&.is_author?(question)
+    = link_to 'Delete', question_path(question), class: 'float-right', method: :delete
+    = link_to 'Edit', '#', class: 'edit-question-link float-right mr-4', data: { question_id: question.id }
+    = render 'form', hidden: true
+  p= question.body
 
-.attached-files
-- if question.files.attached?
-  = render question.files
+  .attached-files
+  - if question.files.attached?
+    = render question.files
 
-.attached-links
-  = render question.links
+  .attached-links
+    = render question.links
 
-.question-rates
-  = render 'shared/rates', resource: question
+  .question-rates
+    = render 'shared/rates', resource: question
+
+  .comment-errors
+  .comments
+    = render question.comments
+
+  .new-comment
+    = render 'shared/new_comment', resource: question

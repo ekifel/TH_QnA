@@ -12,10 +12,10 @@ p class = "#{resource.class.name.downcase}-rating"
           [:rate_down, resource],
           class: 'mr-2',
           method: :patch,
-          data: {type: :json},
+          data: { type: :json },
           remote: true
   = link_to 'cancel vote',
           [:cancel_vote, resource],
           method: :delete,
-          data: {type: :json},
+          data: { type: :json },
           remote: true

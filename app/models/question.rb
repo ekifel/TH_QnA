@@ -5,6 +5,7 @@ class Question < ApplicationRecord
   belongs_to :user
 
   include Rateable
+  include Commentable
 
   has_many_attached :files
 
