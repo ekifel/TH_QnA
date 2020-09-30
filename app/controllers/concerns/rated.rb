@@ -2,7 +2,7 @@ module Rated
   extend ActiveSupport::Concern
 
   included do
-    before_action :set_rateable, only: %i[rate_up, rate_down, cancel_vote]
+    before_action :set_rateable, only: %i[rate_up rate_down cancel_vote]
 
     def rate_up
       @rateable.rate_up(current_user)
