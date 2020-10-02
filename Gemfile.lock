@@ -180,6 +180,8 @@ GEM
     omniauth-oauth2 (1.7.0)
       oauth2 (~> 1.4)
       omniauth (~> 1.9)
+    omniauth-vkontakte (1.6.1)
+      omniauth-oauth2 (>= 1.5, <= 1.7.0)
     orm_adapter (0.5.0)
     pg (1.2.3)
     popper_js (1.16.0)
@@ -339,6 +341,7 @@ DEPENDENCIES
   octokit
   omniauth
   omniauth-github
+  omniauth-vkontakte
   pg (>= 0.18, < 2.0)
   puma (~> 4.1)
   rails (~> 6.0.3, >= 6.0.3.2)
