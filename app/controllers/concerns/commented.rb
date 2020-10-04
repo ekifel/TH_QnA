@@ -9,6 +9,7 @@ module Commented
   end
 
   def create_comment
+    authorize! :create_comment, record
     comment.user = current_user
     comment.save
   end

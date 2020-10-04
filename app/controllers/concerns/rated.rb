@@ -5,18 +5,21 @@ module Rated
     before_action :set_rateable, only: %i[rate_up rate_down cancel_vote]
 
     def rate_up
+      authorize! :rate_up, @rateable
       @rateable.rate_up(current_user)
 
       success_response
     end
 
     def rate_down
+      authorize! :rate_down, @rateable
       @rateable.rate_down(current_user)
 
       success_response
     end
 
     def cancel_vote
+      authorize! :cancel_vote, @rateable
       @rateable.cancel_vote(current_user)
 
       success_response
