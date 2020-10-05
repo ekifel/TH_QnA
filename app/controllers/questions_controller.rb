@@ -7,6 +7,8 @@ class QuestionsController < ApplicationController
   include Rated
   include Commented
 
+  authorize_resource
+
   def index; end
 
   def show
@@ -30,15 +32,13 @@ class QuestionsController < ApplicationController
   end
 
   def update
-    question.update(question_params) if current_user.is_author?(question)
+    question.update(question_params)
   end
 
   def destroy
-    if current_user.is_author?(question) && question.destroy
-      redirect_to questions_path, notice: 'Your question deleted successfully'
-    else
-      redirect_to question_path(question), alert: "You don't have permissions to delete this question"
-    end
+    question.destroy
+    flash[:notice] = 'Your question deleted successfully'
+    redirect_to root_path
   end
 
   private

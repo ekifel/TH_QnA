@@ -1,5 +1,7 @@
 <% if question.errors.present? %>
   $('.question_errors').html('<%= render 'shared/errors', resource: question %>')
 <% else %>
-  $('.question-<%= question.id %>').html('<%= j render question %>')
+  var form = document.querySelector('.form-group')
+  form.classList.add('hidden')
+  $('#question-<%= question.id %>').html('<%= j render question %>')
 <% end %>

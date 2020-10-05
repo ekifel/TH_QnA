@@ -3,14 +3,14 @@ div id="answer-id-#{answer.id}" class="mt-3"
     span class="text-success mb-1 best-answer"
       p= 'This answer is best'
       = answer.body
-      img src="#{url_for(question.reward.image)}"
+      img src="#{url_for(question.reward&.image)}"
   - else
     = answer.body
 
-  - if current_user&.is_author?(answer)
+  - if %i[edit destroy].any? { |action| can? action, answer }
     = link_to 'Delete', answer_path(answer), class: 'float-right', method: :delete, remote: true
     = link_to 'Edit', '#', class: 'edit-answer-link float-right mr-4', data: {answer_id: answer.id}
-  - if current_user&.is_author?(answer.question)
+  - if can? :choose_as_best, answer
     = link_to 'Best', choose_as_best_answer_path(answer), method: :patch, remote: true, class: 'float-right mr-4'
 
   .attachments
@@ -20,7 +20,7 @@ div id="answer-id-#{answer.id}" class="mt-3"
     = render answer.links
 
   .answer-rates
-    - if !current_user&.is_author?(answer)
+    - if %i[rate_up rate_down cancel_vote].any? { |action| can? action, answer }
       = render 'shared/rates', resource: answer
 
   .comment-errors

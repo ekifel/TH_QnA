@@ -6,6 +6,8 @@ class AnswersController < ApplicationController
   include Rated
   include Commented
 
+  authorize_resource
+
   def create
     answer.user = current_user
     if answer.save
@@ -16,23 +18,17 @@ class AnswersController < ApplicationController
   end
 
   def update
-    answer.update(answer_params) if current_user.is_author?(answer)
+    answer.update(answer_params)
   end
 
   def destroy
-    if current_user.is_author?(answer) && answer.destroy
-      respond_to do |format|
-        format.js { flash.now[:notice] = 'Your answer deleted successfully!' }
-      end
-    else
-      redirect_to question_path(question)
-    end
+    answer.destroy
+    format.js { flash.now[:notice] = 'Your answer deleted successfully!' }
   end
 
   def choose_as_best
-    if current_user.is_author?(answer.question) && answer.question.reward
-      answer.select_best
-    end
+    authorize! :choose_as_best, answer
+    answer.select_best
   end
 
   private
