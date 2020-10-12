@@ -26,7 +26,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[6.0]
       t.text     :redirect_uri,      null: false
       t.datetime :created_at,        null: false
       t.datetime :revoked_at
-      t.string   :scopes,            null: false, default: ''
+      t.string   :scopes, null: false, default: ''
     end
 
     add_index :oauth_access_grants, :token, unique: true
@@ -55,7 +55,7 @@ class CreateDoorkeeperTables < ActiveRecord::Migration[6.0]
       t.integer  :expires_in
       t.datetime :revoked_at
       t.datetime :created_at, null: false
-      t.string   :scopes
+      t.string   :scopes, null: false, default: ''
 
       # The authorization server MAY issue a new refresh token, in which case
       # *the client MUST discard the old refresh token* and replace it with the

@@ -38,5 +38,6 @@ class Ability
     can :destroy, ActiveStorage::Attachment, record: { user_id: @user.id }
     can :destroy, Link, linkable: { user_id: @user.id }
     can :create_comment, [Question, Answer]
+    can :me, User, { user_id: user.id }
   end
 end

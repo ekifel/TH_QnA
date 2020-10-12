@@ -26,6 +26,9 @@ Doorkeeper.configure do
     end
   end
 
+  default_scopes :read
+  optional_scopes :write
+
   # You can use your own model classes if you need to extend (or even override) default
   # Doorkeeper models such as `Application`, `AccessToken` and `AccessGrant.
   #
