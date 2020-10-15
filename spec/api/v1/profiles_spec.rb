@@ -23,7 +23,7 @@ describe 'Profiles API', type: :request do
       end
 
       it 'returns all public fields' do
-        %w[id email admin created_at updated_at].each do |attr|
+        %w[id email created_at updated_at].each do |attr|
           expect(json['user'][attr]).to eq(me.send(attr).as_json)
         end
       end
@@ -55,7 +55,7 @@ describe 'Profiles API', type: :request do
     end
 
     it 'returns all public fields' do
-      %w[id email admin created_at updated_at].each do |attr|
+      %w[id email created_at updated_at].each do |attr|
         expect(user_response[attr]).to eq user.send(attr).as_json
       end
     end
