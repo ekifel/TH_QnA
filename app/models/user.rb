@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
   has_many :rewards
   has_many :authorizations, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
 
   def is_author?(object)
     id == object.user_id

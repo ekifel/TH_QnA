@@ -28,6 +28,8 @@ describe Ability do
     let(:answer) { create(:answer, :with_files, user: user, question: question) }
     let(:another_answer) { create(:answer, :with_files, user: another_user, question: another_question) }
     let(:link) { create(:link) }
+    let(:subscription) { create(:subscription, question: another_question, user: user) }
+    let(:wrong_subscription) { create(:subscription, question: question, user: other) }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
@@ -67,6 +69,12 @@ describe Ability do
       it { should be_able_to :destroy, create(:link, linkable: answer) }
       it { should be_able_to :choose_best_answer, another_answer }
       it { should_not be_able_to :choose_best_answer, answer }
+    end
+
+    describe 'Subscription' do
+      it { should be_able_to :create, Subscription }
+      it { should be_able_to :destroy, subscription }
+      it { should_not be_able_to :destroy, wrong_subscription }
     end
   end
 end

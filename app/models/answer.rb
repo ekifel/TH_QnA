@@ -2,6 +2,7 @@ class Answer < ApplicationRecord
   belongs_to :question
   belongs_to :user
   has_many :links, dependent: :destroy, as: :linkable
+  after_create :send_notice
 
   include Rateable
   include Commentable
@@ -21,5 +22,11 @@ class Answer < ApplicationRecord
       update!(best: true)
       question.reward&.update!(user: user)
     end
+  end
+
+  private
+
+  def send_notice
+    NewAnswerNoticeJob.perform_later(self) if question.subscriptions.any?
   end
 end

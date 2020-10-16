@@ -1,6 +1,8 @@
 div class="question"
   = render question
 
+= render 'subscriptions/subscription'
+
 h3 = "#{question.answers.count} Answers"
 
 .answers
