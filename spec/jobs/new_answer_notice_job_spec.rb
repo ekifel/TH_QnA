@@ -1,13 +1,13 @@
 require 'rails_helper'
 
 RSpec.describe NewAnswerNoticeJob, type: :job do
-  let(:service) { double('Services::NewAnswerNotice') }
+  let(:service) { double('NewAnswerNoticeServes') }
   let(:question) { create(:question) }
   let(:answer) { create(:answer, question: question) }
   let(:foreign_users) { create_list(:user, 2) }
 
-  it 'calls Services::DailyDigest#send_notice(answer)' do
-    allow(Services::NewAnswerNotice).to receive(:new).and_return(service)
+  it 'calls DailyDigestService#send_notice(answer)' do
+    allow(NewAnswerNoticeService).to receive(:new).and_return(service)
 
     expect(service).to receive(:send_notice).with(answer)
     NewAnswerNoticeJob.perform_now(answer)
@@ -15,7 +15,7 @@ RSpec.describe NewAnswerNoticeJob, type: :job do
 
   it 'job is created' do
     question.subscriptions.delete_all
-    allow(Services::NewAnswerNotice).to receive(:new).and_return(service)
+    allow(NewAnswerNoticeService).to receive(:new).and_return(service)
 
     expect do
       described_class.perform_later(answer)

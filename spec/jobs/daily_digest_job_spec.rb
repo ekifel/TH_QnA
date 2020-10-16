@@ -1,10 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe DailyDigestJob, type: :job do
-  let(:service) { double('Service::DailyDigest') }
+  let(:service) { double('DailyDigestService') }
   let(:users) { create_list(:user, 3) }
   before do
-    allow(Services::DailyDigest).to receive(:new).and_return(service)
+    allow(DailyDigestService).to receive(:new).and_return(service)
   end
 
   it 'calls Services::DailyDigest#send_digest' do

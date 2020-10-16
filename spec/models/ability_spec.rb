@@ -29,7 +29,7 @@ describe Ability do
     let(:another_answer) { create(:answer, :with_files, user: another_user, question: another_question) }
     let(:link) { create(:link) }
     let(:subscription) { create(:subscription, question: another_question, user: user) }
-    let(:wrong_subscription) { create(:subscription, question: question, user: other) }
+    let(:wrong_subscription) { create(:subscription, question: question, user: another_user) }
 
     it { should_not be_able_to :manage, :all }
     it { should be_able_to :read, :all }
