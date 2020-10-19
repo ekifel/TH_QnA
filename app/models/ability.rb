@@ -32,9 +32,9 @@ class Ability
     end
     can :read, :all
     can :choose_as_best, Answer, question: { user_id: @user.id }
-    can :create, [Question, Answer, Link]
+    can :create, [Question, Answer, Link, Subscription]
     can :update, [Question, Answer], user_id: @user.id
-    can :destroy, [Question, Answer], user_id: @user.id
+    can :destroy, [Question, Answer, Subscription], user_id: @user.id
     can :destroy, ActiveStorage::Attachment, record: { user_id: @user.id }
     can :destroy, Link, linkable: { user_id: @user.id }
     can :create_comment, [Question, Answer]

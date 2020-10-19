@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe AnswersController, type: :controller do
+  include ActiveJob::TestHelper
+
   let(:user) { create(:user) }
   let(:wrong_user) { create(:user) }
   let(:question) { create(:question) }
@@ -160,6 +162,30 @@ RSpec.describe AnswersController, type: :controller do
       before { patch :choose_as_best, params: { id: answer, format: :js } }
 
       it { expect(question.reload.best_answer).to_not eq answer }
+    end
+  end
+
+  describe 'Active job notice' do
+    before do
+      login(user)
+      clear_enqueued_jobs
+    end
+
+    subject { post :create, params: { question_id: question, answer: answer_params, format: :js } }
+
+    let(:answer_params) { attributes_for(:answer) }
+
+    it 'answer owner subscribed to question' do
+      expect { subject }.to change(enqueued_jobs, :count).by(1)
+    end
+
+    it 'question subscribers not exists' do
+      question.subscriptions.delete_all
+      expect { subject }.to change(enqueued_jobs, :count).by(0)
+    end
+
+    it 'create correct job' do
+      expect { subject }.to have_enqueued_job(NewAnswerNoticeJob)
     end
   end
 
