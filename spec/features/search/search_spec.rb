@@ -87,7 +87,7 @@ feature 'Every user can search', %q{
 
         within '.search-results' do
           expect(page).to_not have_content question.title
-          expect(page).to have_content 'Вы выполнили пустой запрос'
+          expect(page).to have_content 'По запросу ничего не найдено'
         end
       end
     end
@@ -100,7 +100,7 @@ feature 'Every user can search', %q{
 
         within '.search-results' do
           expect(page).to_not have_content answer.body
-          expect(page).to have_content 'Вы выполнили пустой запрос'
+          expect(page).to have_content 'По запросу ничего не найдено'
         end
       end
     end
@@ -113,7 +113,7 @@ feature 'Every user can search', %q{
 
         within '.search-results' do
           expect(page).to_not have_content comment.body
-          expect(page).to have_content 'Вы выполнили пустой запрос'
+          expect(page).to have_content 'По запросу ничего не найдено'
         end
       end
     end
@@ -126,7 +126,7 @@ feature 'Every user can search', %q{
 
         within '.search-results' do
           expect(page).to_not have_content user.email
-          expect(page).to have_content 'Вы выполнили пустой запрос'
+          expect(page).to have_content 'По запросу ничего не найдено'
         end
       end
     end
@@ -143,7 +143,7 @@ feature 'Every user can search', %q{
           expect(page).to_not have_content comment.body
           expect(page).to_not have_content user.email
           expect(page).to_not have_content question.title
-          expect(page).to have_content 'Вы выполнили пустой запрос'
+          expect(page).to have_content 'По запросу ничего не найдено'
         end
       end
     end
