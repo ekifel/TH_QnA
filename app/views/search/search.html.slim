@@ -1,0 +1,20 @@
+- if @search.result
+  p По запросу "#{@search.body}"
+  p Найдено #{@search.result.count} результатов:
+
+  ul.list-group.search-results
+    - @search.result.each do |object|
+      li.list-group-item
+        - if object.is_a?(Question)
+          = link_to object.title, question_path(object)
+        - if object.is_a?(User)
+          = object.email
+        - if object.is_a?(Answer)
+          = link_to object.body, question_path(object.question)
+        - if object.is_a?(Comment)
+          = link_to object.body, question_path(object.commentable)
+- else
+  .search-results.mt-3
+    h4 По запросу ничего не найдено
+
+= link_to 'Back', questions_path
