@@ -8,6 +8,8 @@ Rails.application.routes.draw do
   use_doorkeeper
   devise_for :users, controllers: { omniauth_callbacks: 'oauth_callbacks' }
 
+  get 'search', to: "search#search"
+
   concern :rateable do
     member do
       patch :rate_up
@@ -41,7 +43,6 @@ Rails.application.routes.draw do
       resources :questions, only: %i[index show create update destroy] do
         resources :answers, only: %i[index show create update destroy], shallow: true
       end
-
     end
   end
 
