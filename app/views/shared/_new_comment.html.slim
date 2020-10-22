@@ -1,6 +1,5 @@
 - if user_signed_in?
-  = form_with model: [resource, resource.comments.build], url: polymorphic_path([:create_comment, resource]) do |f|
-    p
-      = f.label :body
-      = f.text_area :body
-      = f.submit 'Post Comment'
+  = form_with model: [resource, resource.comments.build], url: polymorphic_path([:create_comment, resource]), class: 'form-group' do |f|
+    = f.label :body, "Post New Comment:"
+    = f.text_area :body, class: 'form-control comment-text'
+    = f.submit 'Post Comment', class: 'btn btn-outline-primary mt-2'

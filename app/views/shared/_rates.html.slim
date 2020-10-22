@@ -1,5 +1,5 @@
 p class = "#{resource.class.name.downcase}-rating"
-  = resource.rating
+  = "#{resource.class.name}'s rating: #{resource.rating}"
 
 .rate-actions
   = link_to '+',
