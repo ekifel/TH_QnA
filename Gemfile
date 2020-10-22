@@ -54,7 +54,7 @@ gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
 
-gem 'sidekiq'
+gem 'sidekiq', '~> 3.4.2'
 gem 'i18n'
 gem 'sinatra', require: false
 gem 'whenever', require: false
