@@ -63,6 +63,8 @@ gem 'mysql2', '~> 0.4.10', :platform => :ruby
 gem 'thinking-sphinx', '~> 4.0'
 gem 'database_cleaner', '~> 1.8', '>= 1.8.3'
 
+gem 'mini_racer'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
@@ -78,6 +80,14 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'rb-readline'
+
+  gem 'capistrano', require: false
+  gem 'capistrano-bundler', require: false
+  gem 'capistrano-rails', require: false
+  gem 'capistrano-rvm', require: false
+  gem 'capistrano-passenger', require: false
+  gem 'ed25519'
+  gem 'bcrypt_pbkdf'
 end
 
 group :test do
