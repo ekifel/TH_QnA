@@ -1,12 +1,18 @@
-nav class='navbar navbar-light bg-light'
-  - if user_signed_in?
-    = "Welcome, #{current_user.email} "
-    =link_to 'log out', destroy_user_session_path, method: :delete, class: 'nav-link float-right'
-    =link_to 'Rewards', rewards_path, class: 'nav-link'
-  - else
-    =link_to 'log in', new_user_session_path, class: 'nav-link'
-    =link_to 'sign up', new_user_registration_path, class: 'nav-link'
-  = form_with url: search_path, scope: :search, method: :get, local: true do |f|
-    = f.text_field :q
-    = f.select :section, collection: SphinxSearchService::SECTIONS
-    = f.submit 'Search', class: 'btn btn-outline-secondary'
+nav class='navbar navbar-light bg-dark'
+  div class='container'
+    - if user_signed_in?
+      span.navbar-brand style='color: white;'
+        = "Welcome, #{current_user.email} "
+      ul.navbar-nav
+        li.nav-item
+          = link_to 'Log out', destroy_user_session_path, method: :delete, class: 'nav-link', style: 'color: white;'
+        li.nav-item
+          = link_to 'Rewards', rewards_path, class: 'nav-link', style: 'color: white;'
+    - else
+      span.navbar-brand style='color: white;'
+        = "Welcome, Guest!"
+      ul.navbar-nav
+        li.nav-item
+          = link_to 'Log in', new_user_session_path, class: 'nav-link', style: 'color: white;'
+        li.nav-item
+          = link_to 'Sign up', new_user_registration_path, class: 'nav-link', style: 'color: white;'

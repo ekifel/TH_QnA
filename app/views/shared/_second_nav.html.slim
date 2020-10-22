@@ -1,0 +1,10 @@
+nav class='navbar navbar-light bg-light shadow'
+  .container style="height: 40px;"
+    - if can?(:create, Question)
+      p.navbar-nav
+        = link_to 'Ask question', new_question_path, class: 'new-question-link nav-item'
+
+    = form_with url: search_path, scope: :search, method: :get, class: 'form-inline', local: true do |f|
+      = f.select :section, collection: SphinxSearchService::SECTIONS
+      = f.text_field :q
+      = f.submit 'Search', class: 'btn btn-outline-secondary ml-2'

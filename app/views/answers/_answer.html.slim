@@ -1,43 +1,51 @@
 div id="answer-id-#{answer.id}" class="mt-3"
-  - if answer.best
-    span class="text-success mb-1 best-answer"
-      p= 'This answer is best'
-      = answer.body
-      img src="#{url_for(question.reward&.image)}"
-  - else
-    = answer.body
+  div.card.border-secondary.mt-4
+    .card-header
+      - if answer.best
+        span class="text-success mb-1 best-answer"
+          p
+            = 'This answer is best'
+          = answer.body
+          - if question.reward
+            img src="#{url_for(question.reward&.image)}"
+      - else
+        = answer.body
 
-  - if %i[edit destroy].any? { |action| can? action, answer }
-    = link_to 'Delete', answer_path(answer), class: 'float-right', method: :delete, remote: true
-    = link_to 'Edit', '#', class: 'edit-answer-link float-right mr-4', data: {answer_id: answer.id}
-  - if can? :choose_as_best, answer
-    = link_to 'Best', choose_as_best_answer_path(answer), method: :patch, remote: true, class: 'float-right mr-4'
+      div.actions.mt-4
+        - if %i[edit destroy].any? { |action| can? action, answer }
+          = link_to 'Delete', answer_path(answer), class: 'mr-4', method: :delete, remote: true
+          = link_to 'Edit', '#', class: 'edit-answer-link mr-4', data: {answer_id: answer.id}
+        - if can? :choose_as_best, answer
+          = link_to 'Best', choose_as_best_answer_path(answer), method: :patch, remote: true
 
-  .attachments
-    = render answer.files
+      .attachments
+        = render answer.files
 
-  .attached-links
-    = render answer.links
+      .attached-links
+        = render answer.links
 
-  .answer-rates
-    - if %i[rate_up rate_down cancel_vote].any? { |action| can? action, answer }
-      = render 'shared/rates', resource: answer
+      hr
 
-  .comment-errors
-  .comments
-    = render answer.comments
+      = form_with model: answer, class: 'hidden form-group', html: {id: "edit-answer-#{answer.id}"} do |f|
+        = f.label :body, 'Your answer'
+        = f.text_area :body, class: 'form-control'
+        = f.label :files
+        = f.file_field :files, multiple: true, class: 'form-control'
+        #new-links
+          .links
+            = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
+        = f.submit 'Save', class: 'btn btn-outline-secondary'
 
-  .new-comment
-    = render 'shared/new_comment', resource: answer
+      .answer-rates.mt-2
+        - if %i[rate_up rate_down cancel_vote].any? { |action| can? action, answer }
+          = render 'shared/rates', resource: answer
 
-  = form_with model: answer, class: 'hidden', html: { id: "edit-answer-#{answer.id}" } do |f|
-    = f.label :body, 'Your answer'
-    p
-    = f.text_area :body
-    p
-    = f.label :files
-    = f.file_field :files, multiple: true
-    #new-links
-      .links
-        = link_to_add_association 'Add link', f, :links, partial: 'shared/link_fields'
-    = f.submit 'Save'
+    .card-body
+      .comment-errors
+      h4
+        = "Comments:"
+      .comments
+        = render answer.comments
+
+      .new-comment
+        = render 'shared/new_comment', resource: answer
