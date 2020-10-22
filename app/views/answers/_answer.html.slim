@@ -5,11 +5,12 @@ div id="answer-id-#{answer.id}" class="mt-3"
         span class="text-success mb-1 best-answer"
           p
             = 'This answer is best'
-          = answer.body
           - if question.reward
             img src="#{url_for(question.reward&.image)}"
-      - else
+      span
         = answer.body
+      span.float-right
+        = answer.user.email
 
       div.actions.mt-4
         - if %i[edit destroy].any? { |action| can? action, answer }
