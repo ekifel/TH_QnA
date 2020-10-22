@@ -88,6 +88,7 @@ group :development do
   gem 'capistrano-passenger', require: false
   gem 'ed25519'
   gem 'bcrypt_pbkdf'
+  gem 'capistrano-sidekiq', require: false
 end
 
 group :test do
