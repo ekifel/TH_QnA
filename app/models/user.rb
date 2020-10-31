@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :omniauthable, :comfirmable, omniauth_providers: %i[github vkontakte]
+         :omniauthable, omniauth_providers: %i[github vkontakte]
 
   has_many :answers, dependent: :destroy
   has_many :questions, dependent: :destroy
