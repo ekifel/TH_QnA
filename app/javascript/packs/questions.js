@@ -10,7 +10,8 @@ $(document).on('turbolinks:load', function(){
 
         rating = rateable.rating
         id = rateable.id
+        result = "Question's rating: " + rating
 
-        $('.question .question-rating').html(rating)
+        $('.question .question-rating').html(result)
     })
 });

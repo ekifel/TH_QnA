@@ -10,7 +10,8 @@ $(document).on('turbolinks:load', function(){
 
         rating = rateable.rating
         id = rateable.id
+        result = "Answer's rating: " + rating
 
-        $('.answers #answer-id-'+ id +' .answer-rating').html(rating)
+        $('.answers #answer-id-'+ id +' .answer-rating').html(result)
     })
 });
