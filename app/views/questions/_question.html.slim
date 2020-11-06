@@ -1,26 +1,28 @@
 div id="question-#{question.id}"
-  div
-    span style="font-size: 200%;"
-      = question.title
-    span.float-right.mt-2
-      = render 'subscriptions/subscription'
+  - cache_unless current_user.try(:admin), ['question_title', question] do
+    div
+      span style="font-size: 200%;"
+        = question.title
+      span.float-right.mt-2
+        = render 'subscriptions/subscription'
 
   - if %i[edit destroy].any? { |action| can? action, question }
     = link_to 'Delete', question_path(question), class: 'float-right', method: :delete
     = link_to 'Edit', '#', class: 'edit-question-link float-right mr-4', data: { question_id: question.id }
     = render 'form', hidden: true
     hr
-  p
-    = question.body
+  - cache_unless current_user.try(:admin), ['question_body_with_attachments', question] do
+    p
+      = question.body
 
-  .attached-files
-  - if question.files.attached?
-    = render question.files
+    .attached-files
+    - if question.files.attached?
+      = render question.files
 
-  .attached-links
-    = render question.links
+    .attached-links
+      = render question.links
 
-  hr
+    hr
 
   .question-rates
     - if %i[rate_up rate_down cancel_vote].any? { |action| can? action, question }

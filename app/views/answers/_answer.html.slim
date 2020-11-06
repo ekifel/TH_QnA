@@ -7,10 +7,11 @@ div id="answer-id-#{answer.id}" class="mt-3"
             = 'This answer is best'
           - if question.reward
             img src="#{url_for(question.reward&.image)}"
-      span
-        = answer.body
-      span.float-right
-        = answer.user.email
+      - cache_unless current_user.try(:admin), ['answer_body', answer] do
+        span
+          = answer.body
+        span.float-right
+          = answer.user.email
 
       div.actions.mt-4
         - if %i[edit destroy].any? { |action| can? action, answer }
@@ -18,14 +19,14 @@ div id="answer-id-#{answer.id}" class="mt-3"
           = link_to 'Edit', '#', class: 'edit-answer-link mr-4', data: {answer_id: answer.id}
         - if can? :choose_as_best, answer
           = link_to 'Best', choose_as_best_answer_path(answer), method: :patch, remote: true
+      - cache_unless current_user.try(:admin), ['answer_attachments', answer] do
+        .attachments
+          = render answer.files
 
-      .attachments
-        = render answer.files
+        .attached-links
+          = render answer.links
 
-      .attached-links
-        = render answer.links
-
-      hr
+        hr
 
       = form_with model: answer, class: 'hidden form-group', html: {id: "edit-answer-#{answer.id}"} do |f|
         = f.label :body, 'Your answer'

@@ -34,7 +34,11 @@ Rails.application.configure do
   # Don't care if the mailer can't send.
   config.action_mailer.raise_delivery_errors = false
 
-  config.action_mailer.perform_caching = false
+  config.action_mailer.perform_caching = true
+  config.action_controller.enable_fragment_cache_logging = true
+
+  config.cache_store = :redis_cache_store, { expires_in: 90.minutes, url: 'redis://localhost:6379/0/cache/'  }
+
 
   # Print deprecation notices to the Rails logger.
   config.active_support.deprecation = :log

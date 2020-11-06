@@ -1,5 +1,6 @@
-span
-  = "#{comment.body} - "
-span style="color: blue;"
-  = comment.user.email
-hr
+- cache comment do
+  span
+    = "#{comment.body} - "
+  span style="color: blue;"
+    = comment.user.email
+  hr
