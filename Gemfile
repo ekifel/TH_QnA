@@ -53,6 +53,7 @@ gem 'cancancan'
 gem 'doorkeeper'
 gem 'active_model_serializers'
 gem 'oj'
+gem 'sendgrid-ruby'
 
 gem 'sidekiq', '~> 3.4.2'
 gem 'i18n'
